@@ -23,7 +23,6 @@ class TaskController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'is_completed' => 'required|boolean',
         ]);
 
         try {
