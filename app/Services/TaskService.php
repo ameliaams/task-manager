@@ -31,6 +31,6 @@ class TaskService
 
     public function deleteTask($id)
     {
-        $this->taskRepository->delete($id);
+        return $this->taskRepository->delete($id);
     }
 }
