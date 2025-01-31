@@ -23,4 +23,9 @@ class TaskService
     {
         return $this->taskRepository->create($data);
     }
+
+    public function updateTask($data, $id)
+    {
+        return $this->taskRepository->update($data, $id);
+    }
 }

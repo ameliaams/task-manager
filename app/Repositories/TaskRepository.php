@@ -23,4 +23,16 @@ class TaskRepository implements TaskInterface
     {
         return Task::create($data);
     }
+
+    public function update($newData, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        if (!$task) {
+            return null;
+        }
+
+        $task->update($newData);
+        return $task;
+    }
 }

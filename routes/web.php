@@ -21,3 +21,4 @@ Route::get('/', function () {
 Route::get('api/tasks', [TaskController::class, 'index']);
 Route::post('api/tasks', [TaskController::class, 'store']);
 Route::get('api/tasks/{id}', [TaskController::class, 'show']);
+Route::put('api/tasks/{id}', [TaskController::class, 'update']);

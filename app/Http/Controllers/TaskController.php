@@ -42,4 +42,23 @@ class TaskController extends Controller
             'data' => $this->taskService->getTaskById($id)
         ]);
     }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        $validatedData = $request->validate([
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|nullable|string',
+            'is_completed' => 'sometimes|boolean'
+        ]);
+
+        try {
+            $task = $this->taskService->updateTask($validatedData, $id);
+            return response()->json([
+                'success' => 'Task Berhasil Diperbarui!',
+                'data' => $task
+            ], 201);
+        } catch (\Throwable $err) {
+            return response()->json(['error' => 'Task Gagal Diperbarui!', 'message' => $err->getMessage()], 500);
+        }
+    }
 }
