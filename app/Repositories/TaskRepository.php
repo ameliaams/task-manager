@@ -35,4 +35,9 @@ class TaskRepository implements TaskInterface
         $task->update($newData);
         return $task;
     }
+
+    public function delete($id)
+    {
+        Task::destroy($id);
+    }
 }

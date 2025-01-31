@@ -61,4 +61,16 @@ class TaskController extends Controller
             return response()->json(['error' => 'Task Gagal Diperbarui!', 'message' => $err->getMessage()], 500);
         }
     }
+
+    public function destroy($id): JsonResponse
+    {
+        try {
+            $this->taskService->deleteTask($id);
+            return response()->json([
+                'success' => 'Task Berhasil Dihapus'
+            ]);
+        } catch (\Throwable $err) {
+            return response()->json(['error' => 'Task Gagal Dihapus!', 'message' => $err->getMessage()], 500);
+        }
+    }
 }
