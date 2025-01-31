@@ -14,6 +14,8 @@ class TaskController extends Controller
     public function index(): JsonResponse
     {
         return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil Menampilkan Seluruh Data!',
             'data' => $this->taskService->getAllTasks()
         ]);
     }
@@ -28,17 +30,24 @@ class TaskController extends Controller
         try {
             $task = $this->taskService->createTask($validatedData);
             return response()->json([
-                'success' => 'Task Berhasil Ditambahkan!',
+                'status' => 'success',
+                'message' => 'Task Berhasil Ditambahkan!',
                 'data' => $task
             ], 201);
         } catch (\Throwable $err) {
-            return response()->json(['error' => 'Task Gagal Dibuat!', 'message' => $err->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task Gagal Dibuat!',
+                'data' => $err->getMessage()
+            ], 500);
         }
     }
 
     public function show($id): JsonResponse
     {
         return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil Menampilkan Data!',
             'data' => $this->taskService->getTaskById($id)
         ]);
     }
@@ -54,11 +63,16 @@ class TaskController extends Controller
         try {
             $task = $this->taskService->updateTask($validatedData, $id);
             return response()->json([
-                'success' => 'Task Berhasil Diperbarui!',
+                'status' => 'success',
+                'message' => 'Task Berhasil Diperbarui!',
                 'data' => $task
             ], 201);
         } catch (\Throwable $err) {
-            return response()->json(['error' => 'Task Gagal Diperbarui!', 'message' => $err->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task Gagal Diperbarui!',
+                'data' => $err->getMessage()
+            ], 500);
         }
     }
 
@@ -67,10 +81,15 @@ class TaskController extends Controller
         try {
             $this->taskService->deleteTask($id);
             return response()->json([
+                'status' => 'success',
                 'success' => 'Task Berhasil Dihapus'
             ]);
         } catch (\Throwable $err) {
-            return response()->json(['error' => 'Task Gagal Dihapus!', 'message' => $err->getMessage()], 500);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Task Gagal Dihapus!',
+                'data' => $err->getMessage()
+            ], 500);
         }
     }
 }
