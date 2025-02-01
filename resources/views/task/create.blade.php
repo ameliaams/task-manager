@@ -18,14 +18,6 @@
             <textarea class="form-control" id="taskDescription" name="description" rows="3"></textarea>
         </div>
 
-        <div class="mb-3">
-            <label for="taskStatus" class="form-label">Status</label>
-            <select class="form-select" id="taskStatus" name="is_completed" required>
-                <option value="0">Uncompleted</option>
-                <option value="1">Completed</option>
-            </select>
-        </div>
-
         <button type="submit" class="btn btn-primary">Create Task</button>
         <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Back to Task List</a>
     </form>
@@ -43,7 +35,16 @@ $(document).ready(function() {
             data: formData,
             success: function(response) {
                 alert(response.message);
-                window.location.href = "{{ route('tasks.index') }}";
+                $('#taskTable').append(`
+                    <tr>
+                        <td>${response.data.title}</td>
+                        <td>${response.data.description}</td>
+                        <td>
+                            <button class="btn btn-warning" onclick="editTask(${response.data.id})">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteTask(${response.data.id})">Delete</button>
+                        </td>
+                    </tr>
+                `);
             },
             error: function(xhr) {
                 alert("Gagal menambahkan task!");
