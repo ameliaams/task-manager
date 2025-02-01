@@ -72,7 +72,7 @@ class TaskController extends Controller
     }
 
 
-    public function show($id): JsonResponse
+    public function show($id)
     {
         $task = $this->taskService->getTaskById($id);
 
@@ -90,7 +90,13 @@ class TaskController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function edit($id)
+    {
+        $tasks = $this->taskService->getTaskById($id);
+        return view('task.edit', compact('tasks'));
+    }
+
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'title' => 'sometimes|string|max:255',
@@ -100,16 +106,21 @@ class TaskController extends Controller
 
         try {
             $task = $this->taskService->updateTask($validatedData, $id);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Task Berhasil Diperbarui!',
-                'data' => $task
-            ], 201);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Task Berhasil Diperbarui!',
+                    'data' => $task
+                ], 200);
+            }
+
+            return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
         } catch (\Throwable $err) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Task Gagal Diperbarui!',
-                'data' => $err->getMessage()
+                'error' => $err->getMessage()
             ], 500);
         }
     }

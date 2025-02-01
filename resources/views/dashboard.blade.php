@@ -28,7 +28,8 @@
                         <span class="badge bg-danger">Uncompleted</span>
                     @endif
                 </td>
-                <td><button type="button" class="btn btn-warning" href="{{ url('/api/tasks/{id}') }}">Edit</button>
+                <td>
+                    <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit</a>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </td>
             </tr>
