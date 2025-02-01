@@ -11,30 +11,51 @@ class TaskController extends Controller
 {
     public function __construct(protected TaskService $taskService) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request)
     {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Berhasil Menampilkan Seluruh Data!',
-            'data' => $this->taskService->getAllTasks()
-        ]);
+        $tasks = $this->taskService->getAllTasks();
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil Menampilkan Seluruh Data!',
+                'data' => $tasks
+            ]);
+        }
+
+        return view('dashboard', compact('tasks'));
     }
 
-    public function store(Request $request): JsonResponse
+    public function create()
+    {
+        return view('task.create');
+    }
+
+    public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
+                'is_completed' => 'boolean'
             ]);
 
             $task = $this->taskService->createTask($validatedData);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Task Berhasil Ditambahkan!',
-                'data' => $task
-            ], 201);
+            if (!$task) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Gagal menambahkan task!'
+                ], 500);
+            }
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Task Berhasil Ditambahkan!',
+                    'data' => $task
+                ], 201);
+            }
+            return redirect()->route('tasks.index')->with('success', 'Task created successfully');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'status' => 'error',
