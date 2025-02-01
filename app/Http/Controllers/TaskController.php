@@ -125,27 +125,38 @@ class TaskController extends Controller
         }
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy($id, Request $request)
     {
         try {
             $deleted = $this->taskService->deleteTask($id);
+
             if (!$deleted) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Task tidak ditemukan!'
-                ], 404);
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Task tidak ditemukan!'
+                    ], 404);
+                }
+
+                return redirect()->route('tasks.index')->with('error', 'Task tidak ditemukan!');
             }
 
-            return response()->json([
-                'status' => 'success',
-                'success' => 'Task Berhasil Dihapus'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Task Berhasil Dihapus'
+                ]);
+            }
+            return redirect()->route('tasks.index')->with('success', 'Task Berhasil Dihapus');
         } catch (\Throwable $err) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Task Gagal Dihapus!',
-                'data' => $err->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Task Gagal Dihapus!',
+                    'error' => $err->getMessage()
+                ], 500);
+            }
+            return redirect()->route('tasks.index')->with('error', 'Task Gagal Dihapus!');
         }
     }
 }
