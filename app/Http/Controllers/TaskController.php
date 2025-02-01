@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\TaskService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {

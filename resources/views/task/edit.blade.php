@@ -8,7 +8,7 @@
 
     <form id="addTaskForm" action="{{ route('tasks.update', $tasks->id) }}" method="POST">
         @csrf
-        @method('PUT')  <!-- Tambahkan @method('PUT') di sini -->
+        @method('PUT')
 
         <div class="mb-3">
             <label for="taskTitle" class="form-label">Title</label>
@@ -40,8 +40,8 @@
             let formData = $(this).serialize();
 
             $.ajax({
-                url: "{{ route('tasks.update', $tasks->id) }}",  // Ganti ke tasks.update
-                method: 'POST',  // Gantilah menjadi POST
+                url: "{{ route('tasks.update', $tasks->id) }}",
+                method: 'POST',
                 data: formData,
                 success: function(response) {
                     alert(response.message);
